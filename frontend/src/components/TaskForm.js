@@ -8,7 +8,9 @@ function TaskForm({ addTask }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const userid = JSON.parse(localStorage.getItem('user'))._id;
     const newTask = {
+      userid,
       name,
       description,
       deadline,

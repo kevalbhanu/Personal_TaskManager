@@ -5,7 +5,7 @@ const { jwtAuthMiddleware } = require("../middleware/jwt");
 
 //@desc Create Task
 //@route /api/task/create
-router.post("/create", async (req, res) => {
+router.post("/create",jwtAuthMiddleware, async (req, res) => {
   try {
     const data = req.body;
     const task = new Task(data);
@@ -23,7 +23,7 @@ router.post("/create", async (req, res) => {
 
 //@desc Update Task
 //@route /api/task/update/:id
-router.put("/update/:id", async (req, res) => {
+router.put("/update/:id",jwtAuthMiddleware, async (req, res) => {
   try {
     const data = req.body;
     const id = req.params.id;
@@ -41,9 +41,10 @@ router.put("/update/:id", async (req, res) => {
 
 //@desc Get Tasks
 //@route /api/task/get
-router.get("/get", async (req, res) => {
+router.get("/get/:userid",jwtAuthMiddleware, async (req, res) => {
   try {
-    const response = await Task.find();
+    const userid = req.params.userid;
+    const response = await Task.find({userid:userid});
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({
@@ -55,7 +56,7 @@ router.get("/get", async (req, res) => {
 
 //@desc Delete Task
 //@route /api/task/delete
-router.delete("/delete/:id",  async (req, res) => {
+router.delete("/delete/:id",jwtAuthMiddleware,  async (req, res) => {
   try {
     const responce = await Task.findByIdAndDelete(req.params.id);
     res.status(200).json({
@@ -71,7 +72,7 @@ router.delete("/delete/:id",  async (req, res) => {
 
 //@desc Search Task
 //@route /api/task/search
-router.get("/search", async (req, res) => {
+router.get("/search",jwtAuthMiddleware, async (req, res) => {
   try {
     const query = req.query.query;
     const tasks = await Task.find({
